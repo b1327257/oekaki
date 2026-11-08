@@ -1,0 +1,2138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>わくわく！おえかき＆スタンプランド（3さい〜・Fireタブレット対応）</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <style>
+    :root {
+      --bg-primary: #FFF8E7;
+      --panel-bg: #FFFFFF;
+      --accent-orange: #FF7A00;
+      --accent-blue: #00A8E8;
+      --accent-pink: #FF4D8D;
+      --accent-green: #2EC4B6;
+      --accent-purple: #8338EC;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: none;
+      background-color: #FFE8B6;
+      font-family: "Hiragino Maru Gothic ProN", "Rounded Mplus 1c", "BIZ UDPGothic", "Noto Sans JP", sans-serif;
+    }
+
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background: linear-gradient(135deg, #FFE6A7 0%, #FFD1DC 50%, #C8F4F9 100%);
+    }
+
+    /* Top Header Bar */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 4px solid #FFD166;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      gap: 6px;
+      flex-shrink: 0;
+      z-index: 30;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .top-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .top-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Big Kid-Friendly Buttons */
+    .kid-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 7px 12px;
+      border-radius: 18px;
+      border: 3px solid rgba(0,0,0,0.12);
+      background: #FFFFFF;
+      color: #333333;
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.1;
+      cursor: pointer;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.14);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .kid-btn:active {
+      transform: translateY(3px) scale(0.97);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.14);
+    }
+
+    .kid-btn.active {
+      border-color: #FF595E;
+      background: #FFF0F3;
+      box-shadow: 0 0 0 3px #FFCA3A, 0 4px 0 rgba(255,89,94,0.35);
+      transform: translateY(-1px);
+    }
+
+    .kid-btn .btn-emoji {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    /* Main Workspace Area */
+    .workspace {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      padding: 8px;
+      gap: 8px;
+    }
+
+    /* Left Panel: Tools & Stamps */
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      width: 104px;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 22px;
+      padding: 8px 6px;
+      border: 3px solid #FFCA3A;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      overflow-y: auto;
+      scrollbar-width: none;
+      z-index: 20;
+    }
+    .left-panel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tool-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      border-radius: 16px;
+      border: 3px solid #E5E7EB;
+      background: #FFFFFF;
+      font-weight: 800;
+      font-size: 12px;
+      color: #374151;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #D1D5DB;
+      transition: all 0.12s ease;
+      min-height: 58px;
+      flex-shrink: 0;
+    }
+
+    .tool-btn .tool-icon {
+      font-size: 25px;
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+
+    .tool-btn.active {
+      border-color: #FF595E;
+      background: linear-gradient(180deg, #FFF5F5 0%, #FFE3E3 100%);
+      color: #D90429;
+      box-shadow: 0 0 0 3px #FFCA3A, 0 3px 0 #FF595E;
+      transform: scale(1.03);
+    }
+
+    /* Center Canvas Stage */
+    .canvas-stage {
+      flex: 1;
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #FFFFFF;
+      border: 5px solid #FFFFFF;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14), inset 0 0 0 2px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .canvas-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    #bgCanvas {
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #drawCanvas {
+      z-index: 2;
+      cursor: crosshair;
+    }
+
+    #fxCanvas {
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Right Panel: Colors & Sizes OR Stamp Selector */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 156px;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 22px;
+      padding: 8px 7px;
+      border: 3px solid #4CC9F0;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      overflow-y: auto;
+      scrollbar-width: none;
+      z-index: 20;
+    }
+    .right-panel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+    }
+
+    .color-swatch {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      border: 4px solid #FFFFFF;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.22);
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .color-swatch.rainbow-swatch {
+      grid-column: 1 / -1;
+      aspect-ratio: auto;
+      height: 44px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #FF2A55 0%, #FF7A00 18%, #FFD000 36%, #10B981 54%, #00B4D8 72%, #2563EB 86%, #9333EA 100%);
+      color: #FFFFFF;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      gap: 4px;
+    }
+
+    .color-swatch.active {
+      transform: scale(1.08);
+      border-color: #1F2937;
+      box-shadow: 0 0 0 3px #FFCA3A, 0 4px 10px rgba(0,0,0,0.3);
+      z-index: 2;
+    }
+
+    .size-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 2px;
+      padding-top: 6px;
+      border-top: 2px dashed #E5E7EB;
+    }
+
+    .size-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 14px;
+      border: 2px solid #E5E7EB;
+      background: #F9FAFB;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .size-btn.active {
+      border-color: #3B82F6;
+      background: #EFF6FF;
+      color: #1D4ED8;
+      box-shadow: 0 0 0 2px #93C5FD;
+    }
+
+    /* Prominent 4-Category Stamp Switcher inside Right Panel */
+    .stamp-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+      background: #F8FAFC;
+      padding: 4px;
+      border-radius: 16px;
+      border: 2px solid #E2E8F0;
+    }
+
+    .stamp-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      border-radius: 14px;
+      border: 3px solid #E2E8F0;
+      background: #FFFFFF;
+      font-size: 12px;
+      font-weight: 900;
+      color: #334155;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.1);
+      transition: all 0.12s ease;
+      min-height: 58px;
+    }
+
+    .stamp-tab .cat-icon {
+      font-size: 24px;
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+
+    .stamp-tab .num-badge-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #3B82F6;
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 2px 6px;
+      border-radius: 8px;
+      line-height: 1.2;
+      margin-bottom: 3px;
+      letter-spacing: -0.5px;
+    }
+
+    .stamp-tab[data-cat="vehicles"] {
+      background: #FFF5F5;
+      border-color: #FECACA;
+    }
+    .stamp-tab[data-cat="vehicles"].active {
+      background: #FEE2E2;
+      border-color: #EF4444;
+      color: #B91C1C;
+      box-shadow: 0 0 0 3px #FCA5A5, 0 3px 0 #EF4444;
+      transform: scale(1.04);
+    }
+
+    .stamp-tab[data-cat="animals"] {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+    }
+    .stamp-tab[data-cat="animals"].active {
+      background: #FEF3C7;
+      border-color: #F59E0B;
+      color: #B45309;
+      box-shadow: 0 0 0 3px #FDE68A, 0 3px 0 #F59E0B;
+      transform: scale(1.04);
+    }
+
+    .stamp-tab[data-cat="foods"] {
+      background: #FDF2F8;
+      border-color: #FBCFE8;
+    }
+    .stamp-tab[data-cat="foods"].active {
+      background: #FCE7F3;
+      border-color: #EC4899;
+      color: #BE185D;
+      box-shadow: 0 0 0 3px #FBCFE8, 0 3px 0 #EC4899;
+      transform: scale(1.04);
+    }
+
+    .stamp-tab[data-cat="numbers"] {
+      background: #EFF6FF;
+      border-color: #BFDBFE;
+    }
+    .stamp-tab[data-cat="numbers"].active {
+      background: #DBEAFE;
+      border-color: #3B82F6;
+      color: #1D4ED8;
+      box-shadow: 0 0 0 3px #BFDBFE, 0 3px 0 #3B82F6;
+      transform: scale(1.04);
+    }
+
+    .stamp-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+
+    .stamp-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 2px;
+      border-radius: 14px;
+      border: 3px solid #E5E7EB;
+      background: #FFFFFF;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+      min-height: 56px;
+    }
+
+    .stamp-item .stamp-emoji {
+      font-size: 24px;
+      line-height: 1.1;
+      font-weight: 900;
+    }
+
+    .stamp-item .stamp-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #374151;
+      margin-top: 2px;
+    }
+
+    .stamp-item.active {
+      border-color: #EC4899;
+      background: #FDF2F8;
+      box-shadow: 0 0 0 2px #F472B6;
+      transform: scale(1.05);
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #FFFFFF;
+      border-radius: 28px;
+      border: 5px solid #FFD166;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      max-width: 680px;
+      width: 100%;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: popIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: #FFF8E7;
+      border-bottom: 3px solid #FFE6A7;
+    }
+
+    .modal-body {
+      padding: 16px 20px;
+      overflow-y: auto;
+    }
+
+    /* Toast message */
+    #toastBanner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(17, 24, 39, 0.92);
+      color: #FFFFFF;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      z-index: 150;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    #toastBanner.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Camera flash effect */
+    #flashOverlay {
+      position: fixed;
+      inset: 0;
+      background: #FFFFFF;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 120;
+      transition: opacity 0.35s ease;
+    }
+
+    /* Hold progress bar for Fullscreen Exit */
+    .hold-progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 6px;
+      background: #EF4444;
+      border-radius: 0 0 14px 14px;
+      width: 0%;
+      transition: width 0.05s linear;
+    }
+
+    /* Responsive adjustments for smaller screens */
+    @media (max-width: 640px) {
+      .left-panel {
+        width: 82px;
+        padding: 6px 4px;
+      }
+      .right-panel {
+        width: 124px;
+        padding: 6px 5px;
+      }
+      .tool-btn {
+        font-size: 10px;
+        min-height: 48px;
+        padding: 4px 2px;
+      }
+      .tool-btn .tool-icon {
+        font-size: 20px;
+      }
+      .kid-btn {
+        padding: 6px 9px;
+        font-size: 12px;
+      }
+      .kid-btn .btn-emoji {
+        font-size: 17px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="flashOverlay"></div>
+  <div id="toastBanner"><span id="toastEmoji">✨</span><span id="toastText">できたよ！</span></div>
+  <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
+
+  <div class="app-shell" id="appShell">
+    <!-- Top Control Bar -->
+    <header class="top-bar">
+      <div class="top-group">
+        <button type="button" class="kid-btn" id="btnUndo" title="1つ前に戻す">
+          <span class="btn-emoji">↩️</span>
+          <span>もどる</span>
+        </button>
+
+        <button type="button" class="kid-btn" id="btnColoringModal" style="background:#FFFBEB; border-color:#F59E0B;">
+          <span class="btn-emoji">📄</span>
+          <span>かみのいろ</span>
+        </button>
+
+        <button type="button" class="kid-btn" id="btnQuickPhoto" style="background:#ECFDF5; border-color:#10B981;">
+          <span class="btn-emoji">📷</span>
+          <span>しゃしんをえらぶ</span>
+        </button>
+      </div>
+
+      <div class="top-group">
+        <button type="button" class="kid-btn" id="btnSoundToggle" style="background:#EFF6FF; border-color:#3B82F6;">
+          <span class="btn-emoji" id="soundEmoji">🔊</span>
+          <span id="soundLabel">おと ON</span>
+        </button>
+
+        <button type="button" class="kid-btn" id="btnSaveArt" style="background:#FDF2F8; border-color:#EC4899;">
+          <span class="btn-emoji">📸</span>
+          <span>ほぞん</span>
+        </button>
+
+        <button type="button" class="kid-btn" id="btnOpenAlbum" style="background:#F3E8FF; border-color:#8B5CF6;">
+          <span class="btn-emoji">🖼️</span>
+          <span>アルバム (<span id="albumCount">0</span>)</span>
+        </button>
+
+        <button type="button" class="kid-btn" id="btnRocketClear" style="background:#FEF2F2; border-color:#EF4444; color:#DC2626;">
+          <span class="btn-emoji">🚀</span>
+          <span>ぜんけし</span>
+        </button>
+
+        <button type="button" class="kid-btn" id="btnFullscreen" style="background:#F0FDF4; border-color:#22C55E; overflow:hidden;">
+          <span class="btn-emoji" id="fullscreenEmoji">📺</span>
+          <span id="fullscreenLabel">ぜんがめん</span>
+          <div class="hold-progress-bar" id="fullscreenHoldBar"></div>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Drawing Workspace -->
+    <main class="workspace">
+      <!-- Left Tool Bar: Brushes & Modes -->
+      <aside class="left-panel" aria-label="おえかきツール">
+        <button type="button" class="tool-btn active" data-tool="crayon" id="toolCrayon">
+          <span class="tool-icon">🖍️</span>
+          <span>クレヨン</span>
+        </button>
+        <button type="button" class="tool-btn" data-tool="sparkle" id="toolSparkle">
+          <span class="tool-icon">✨</span>
+          <span>キラキラ</span>
+        </button>
+        <button type="button" class="tool-btn" data-tool="music" id="toolMusic">
+          <span class="tool-icon">🎵</span>
+          <span>ドレミペン</span>
+        </button>
+        <button type="button" class="tool-btn" data-tool="neon" id="toolNeon">
+          <span class="tool-icon">💡</span>
+          <span>ネオン</span>
+        </button>
+        <button type="button" class="tool-btn" data-tool="kaleido" id="toolKaleido">
+          <span class="tool-icon">❄️</span>
+          <span>まんげきょう</span>
+        </button>
+        <button type="button" class="tool-btn" data-tool="stamp" id="toolStamp">
+          <span class="tool-icon" id="leftStampIcon">🚗</span>
+          <span>スタンプ</span>
+        </button>
+        <button type="button" class="tool-btn" data-tool="eraser" id="toolEraser">
+          <span class="tool-icon">🧽</span>
+          <span>けしゴム</span>
+        </button>
+      </aside>
+
+      <!-- Center Layered Canvas Area -->
+      <section class="canvas-stage" id="canvasStage">
+        <canvas id="bgCanvas" class="canvas-layer"></canvas>
+        <canvas id="drawCanvas" class="canvas-layer"></canvas>
+        <canvas id="fxCanvas" class="canvas-layer"></canvas>
+      </section>
+
+      <!-- Right Panel: Color Palette & Sizes OR Stamps -->
+      <aside class="right-panel" id="rightPanel" aria-label="いろとスタンプ">
+        <!-- Color & Brush Size View -->
+        <div id="paletteSection" style="display:flex; flex-direction:column; gap:8px;">
+          <div style="text-align:center; font-size:12px; font-weight:900; color:#4B5563;">🎨 いろをえらぶ</div>
+          <div class="color-grid" id="colorGrid"></div>
+
+          <div class="size-selector">
+            <div style="text-align:center; font-size:11px; font-weight:900; color:#4B5563;">✏️ ふとさ</div>
+            <button type="button" class="size-btn" data-size="10" id="sizeSmall">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#1F2937;"></span>
+              <span>ほそい</span>
+            </button>
+            <button type="button" class="size-btn active" data-size="22" id="sizeMedium">
+              <span style="display:inline-block; width:14px; height:14px; border-radius:50%; background:#1F2937;"></span>
+              <span>ふつう</span>
+            </button>
+            <button type="button" class="size-btn" data-size="40" id="sizeLarge">
+              <span style="display:inline-block; width:22px; height:22px; border-radius:50%; background:#1F2937;"></span>
+              <span>ふとい</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stamp Selector View -->
+        <div id="stampSection" style="display:none; flex-direction:column; gap:7px;">
+          <div style="text-align:center; font-size:12px; font-weight:900; color:#DB2777;">🌟 スタンプをえらぶ</div>
+          <div class="stamp-tabs" role="tablist" aria-label="スタンプのしゅるい">
+            <button type="button" class="stamp-tab active" data-cat="vehicles" id="tabVehicles">
+              <span class="cat-icon">🚗</span>
+              <span>のりもの</span>
+            </button>
+            <button type="button" class="stamp-tab" data-cat="animals" id="tabAnimals">
+              <span class="cat-icon">🐶</span>
+              <span>どうぶつ</span>
+            </button>
+            <button type="button" class="stamp-tab" data-cat="foods" id="tabFoods">
+              <span class="cat-icon">🍎</span>
+              <span>たべもの</span>
+            </button>
+            <button type="button" class="stamp-tab" data-cat="numbers" id="tabNumbers">
+              <span class="num-badge-icon">123</span>
+              <span>すうじ</span>
+            </button>
+          </div>
+
+          <div class="stamp-grid" id="stampGrid"></div>
+
+          <div class="size-selector">
+            <div style="text-align:center; font-size:11px; font-weight:900; color:#4B5563;">スタンプのおおきさ</div>
+            <div style="display:flex; gap:4px;">
+              <button type="button" class="size-btn" data-stampsize="56" id="stampSizeSmall" style="flex:1; padding:5px 2px; font-size:11px;">ちいさい</button>
+              <button type="button" class="size-btn active" data-stampsize="84" id="stampSizeMedium" style="flex:1; padding:5px 2px; font-size:11px;">ふつう</button>
+              <button type="button" class="size-btn" data-stampsize="118" id="stampSizeLarge" style="flex:1; padding:5px 2px; font-size:11px;">おおきい</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Paper Color Modal (Strictly Paper Colors Only) -->
+  <div class="modal-backdrop" id="coloringModal" role="dialog" aria-modal="true" aria-labelledby="coloringModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="coloringModalTitle" style="margin:0; font-size:20px; font-weight:900; color:#B45309;">📄 かみのいろを えらぼう</h2>
+        <button type="button" class="kid-btn" id="btnCloseColoringModal" style="background:#FEE2E2; border-color:#EF4444;">✖ とじる</button>
+      </div>
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:12px;">
+        <div style="font-size:14px; font-weight:900; color:#4B5563;">
+          🎨 目にやさしい パステルカラーのかみ ＆ くろいかみ（いま描いている絵はそのまま残ります）
+        </div>
+        <div id="templateGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(135px, 1fr)); gap:12px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photo Background Modal (Independent Photo Picker & Size Switcher) -->
+  <div class="modal-backdrop" id="photoModal" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle">
+    <div class="modal-card" style="max-width:540px;">
+      <div class="modal-header" style="background:#ECFDF5; border-color:#6EE7B7;">
+        <h2 id="photoModalTitle" style="margin:0; font-size:20px; font-weight:900; color:#065F46;">📷 しゃしんを えらぶ</h2>
+        <button type="button" class="kid-btn" id="btnClosePhotoModal" style="background:#FEE2E2; border-color:#EF4444;">✖ とじる</button>
+      </div>
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
+        <div style="background:#F0FDF4; border:3px solid #10B981; border-radius:20px; padding:16px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px;">
+          <div style="font-size:15px; font-weight:900; color:#065F46;">
+            タブレットの しゃしんを 背景にして お絵描きしよう！
+          </div>
+          <div style="font-size:12px; font-weight:700; color:#047857;">
+            写真の上からペンやスタンプで遊べます（けしゴムを使っても写真は消えません）
+          </div>
+          <button type="button" class="kid-btn" id="btnModalPickPhoto" style="background:#10B981; color:#FFFFFF; border-color:#059669; padding:12px 24px; font-size:16px;">
+            📷 タブレットから しゃしんを えらぶ
+          </button>
+        </div>
+
+        <!-- Photo Size & Active Photo Controls -->
+        <div id="photoSettingsBox" style="background:#F9FAFB; border:3px solid #E5E7EB; border-radius:20px; padding:14px; display:flex; flex-direction:column; gap:12px;">
+          <div style="font-size:14px; font-weight:900; color:#374151; text-align:center;">
+            🔄 しゃしんの サイズ切り替え
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="kid-btn active" id="btnFitCover" style="flex:1; padding:10px; font-size:13px;">
+              🖼️ 画面いっぱいに広げる
+            </button>
+            <button type="button" class="kid-btn" id="btnFitContain" style="flex:1; padding:10px; font-size:13px;">
+              📐 写真ぜんたいを表示
+            </button>
+          </div>
+          <div id="currentPhotoPreviewWrap" style="display:none; flex-direction:column; align-items:center; gap:8px; padding-top:8px; border-top:2px dashed #E5E7EB;">
+            <img id="currentPhotoPreviewImg" src="" alt="えらんだしゃしん" style="max-height:120px; border-radius:12px; border:2px solid #10B981; object-fit:contain; background:#FFFFFF;">
+            <button type="button" class="kid-btn" id="btnUseLoadedPhoto" style="background:#ECFDF5; border-color:#10B981; color:#065F46; font-size:13px;">
+              ✨ このしゃしんを 背景にする
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rocket Clear Confirmation Modal -->
+  <div class="modal-backdrop" id="clearModal" role="dialog" aria-modal="true" aria-labelledby="clearModalTitle">
+    <div class="modal-card" style="max-width:440px; text-align:center;">
+      <div class="modal-header" style="justify-content:center; background:#FEF2F2;">
+        <h2 id="clearModalTitle" style="margin:0; font-size:22px; font-weight:900; color:#DC2626;">🚀 ロケットで ぜんぶけす？</h2>
+      </div>
+      <div class="modal-body" style="display:flex; flex-direction:column; align-items:center; gap:16px; padding:24px;">
+        <div style="font-size:64px; line-height:1;">🚀✨</div>
+        <p style="margin:0; font-size:15px; font-weight:800; color:#374151;">
+          ロケットが とんでいって きれいになるよ！<br>
+          <span style="font-size:12px; color:#6B7280;">（※まちがえても「↩️もどる」で もとに戻せます）</span>
+        </p>
+        <div style="display:flex; gap:14px; width:100%; justify-content:center;">
+          <button type="button" class="kid-btn" id="btnCancelClear" style="flex:1; padding:14px; font-size:16px; background:#F3F4F6;">
+            ✋ やめる
+          </button>
+          <button type="button" class="kid-btn" id="btnConfirmRocketClear" style="flex:1; padding:14px; font-size:16px; background:#EF4444; color:#FFFFFF; border-color:#B91C1C;">
+            🚀 発射！（けす）
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Album / Gallery Modal -->
+  <div class="modal-backdrop" id="albumModal" role="dialog" aria-modal="true" aria-labelledby="albumModalTitle">
+    <div class="modal-card">
+      <div class="modal-header" style="background:#F3E8FF; border-color:#C084FC;">
+        <h2 id="albumModalTitle" style="margin:0; font-size:20px; font-weight:900; color:#6D28D9;">🖼️ じぶんの アルバム</h2>
+        <button type="button" class="kid-btn" id="btnCloseAlbumModal" style="background:#FEE2E2; border-color:#EF4444;">✖ とじる</button>
+      </div>
+      <div class="modal-body">
+        <div id="albumGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ==========================================
+      // 1. APP STATE & CONFIGURATION
+      // ==========================================
+      const COLORS = [
+        { name: 'にじいろ', hex: 'RAINBOW', isRainbow: true },
+        { name: 'あか', hex: '#FF2A55' },
+        { name: 'オレンジ', hex: '#FF7A00' },
+        { name: 'きいろ', hex: '#FFD000' },
+        { name: 'みどり', hex: '#10B981' },
+        { name: 'きみどり', hex: '#84CC16' },
+        { name: 'みずいろ', hex: '#00B4D8' },
+        { name: 'あお', hex: '#2563EB' },
+        { name: 'むらさき', hex: '#9333EA' },
+        { name: 'ピンク', hex: '#FF5CA8' },
+        { name: 'ちゃいろ', hex: '#8B5E3C' },
+        { name: 'くろ', hex: '#1F2937' },
+        { name: 'しろ', hex: '#FFFFFF' }
+      ];
+
+      // Eye-friendly Pastel Papers + Soft Charcoal Black
+      const PAPER_COLORS = [
+        { id: 'white', title: 'しろいかみ', hex: '#FFFFFF', border: '#D1D5DB', textColor: '#374151' },
+        { id: 'pastel_blue', title: 'みずいろのかみ', hex: '#E0F2FE', border: '#7DD3FC', textColor: '#0369A1' },
+        { id: 'pastel_pink', title: 'さくらのかみ', hex: '#FCE7F3', border: '#F9A8D4', textColor: '#BE185D' },
+        { id: 'pastel_yellow', title: 'クリームのかみ', hex: '#FEF9C3', border: '#FDE047', textColor: '#A16207' },
+        { id: 'pastel_green', title: 'メロンのみどり', hex: '#DCFCE7', border: '#86EFAC', textColor: '#15803D' },
+        { id: 'pastel_purple', title: 'ラベンダーのかみ', hex: '#F3E8FF', border: '#D8B4FE', textColor: '#6D28D9' },
+        { id: 'pastel_orange', title: 'ピーチのかみ', hex: '#FFEDD5', border: '#FDBA74', textColor: '#C2410C' },
+        { id: 'black', title: 'くろいかみ', hex: '#1E293B', border: '#475569', textColor: '#FFFFFF' }
+      ];
+
+      // Universal Unicode 6.0 emojis that never garble on Fire OS + crisp Numbers
+      const STAMPS = {
+        vehicles: [
+          { id: 'car', emoji: '🚗', name: 'くるま', bg: '#FEE2E2', border: '#EF4444' },
+          { id: 'police', emoji: '🚓', name: 'パトカー', bg: '#DBEAFE', border: '#2563EB' },
+          { id: 'firetruck', emoji: '🚒', name: 'しょうぼうしゃ', bg: '#FFEDD5', border: '#EA580C' },
+          { id: 'shinkansen', emoji: '🚅', name: 'しんかんせん', bg: '#E0F2FE', border: '#0284C7' },
+          { id: 'airplane', emoji: '✈️', name: 'ひこうき', bg: '#F0FDF4', border: '#16A34A' },
+          { id: 'rocket', emoji: '🚀', name: 'ロケット', bg: '#F3E8FF', border: '#9333EA' },
+          { id: 'helicopter', emoji: '🚁', name: 'ヘリコプター', bg: '#FEF9C3', border: '#CA8A04' },
+          { id: 'ship', emoji: '🚢', name: 'おふね', bg: '#CFFAFE', border: '#0891B2' }
+        ],
+        animals: [
+          { id: 'dog', emoji: '🐶', name: 'いぬ', bg: '#FEF3C7', border: '#D97706' },
+          { id: 'cat', emoji: '🐱', name: 'ねこ', bg: '#FCE7F3', border: '#DB2777' },
+          { id: 'elephant', emoji: '🐘', name: 'ぞう', bg: '#E0E7FF', border: '#4F46E5' },
+          { id: 'tiger', emoji: '🐯', name: 'とら', bg: '#FFEDD5', border: '#EA580C' },
+          { id: 'frog', emoji: '🐸', name: 'かえる', bg: '#DCFCE7', border: '#16A34A' },
+          { id: 'chick', emoji: '🐥', name: 'ひよこ', bg: '#FEF9C3', border: '#EAB308' },
+          { id: 'rabbit', emoji: '🐰', name: 'うさぎ', bg: '#FFE4E6', border: '#E11D48' },
+          { id: 'panda', emoji: '🐼', name: 'パンダ', bg: '#F3F4F6', border: '#374151' }
+        ],
+        foods: [
+          { id: 'apple', emoji: '🍎', name: 'りんご', bg: '#FEE2E2', border: '#EF4444' },
+          { id: 'banana', emoji: '🍌', name: 'バナナ', bg: '#FEF9C3', border: '#EAB308' },
+          { id: 'strawberry', emoji: '🍓', name: 'いちご', bg: '#FFE4E6', border: '#E11D48' },
+          { id: 'watermelon', emoji: '🍉', name: 'すいか', bg: '#DCFCE7', border: '#16A34A' },
+          { id: 'onigiri', emoji: '🍙', name: 'おにぎり', bg: '#F3F4F6', border: '#4B5563' },
+          { id: 'burger', emoji: '🍔', name: 'ハンバーガー', bg: '#FFEDD5', border: '#D97706' },
+          { id: 'icecream', emoji: '🍦', name: 'アイス', bg: '#E0F2FE', border: '#0284C7' },
+          { id: 'cake', emoji: '🍰', name: 'ケーキ', bg: '#FCE7F3', border: '#DB2777' }
+        ],
+        numbers: [
+          { id: 'num_1', emoji: '1', name: 'いち', bg: '#FEE2E2', border: '#EF4444', kind: 'number', numVal: 1, fill: '#EF4444' },
+          { id: 'num_2', emoji: '2', name: 'に', bg: '#FFEDD5', border: '#EA580C', kind: 'number', numVal: 2, fill: '#EA580C' },
+          { id: 'num_3', emoji: '3', name: 'さん', bg: '#FEF9C3', border: '#CA8A04', kind: 'number', numVal: 3, fill: '#CA8A04' },
+          { id: 'num_4', emoji: '4', name: 'よん', bg: '#DCFCE7', border: '#16A34A', kind: 'number', numVal: 4, fill: '#16A34A' },
+          { id: 'num_5', emoji: '5', name: 'ご', bg: '#E0F2FE', border: '#0284C7', kind: 'number', numVal: 5, fill: '#0284C7' },
+          { id: 'num_6', emoji: '6', name: 'ろく', bg: '#DBEAFE', border: '#2563EB', kind: 'number', numVal: 6, fill: '#2563EB' },
+          { id: 'num_7', emoji: '7', name: 'なな', bg: '#F3E8FF', border: '#9333EA', kind: 'number', numVal: 7, fill: '#9333EA' },
+          { id: 'num_8', emoji: '8', name: 'はち', bg: '#FCE7F3', border: '#DB2777', kind: 'number', numVal: 8, fill: '#DB2777' },
+          { id: 'num_9', emoji: '9', name: 'きゅう', bg: '#FEF3C7', border: '#D97706', kind: 'number', numVal: 9, fill: '#D97706' },
+          { id: 'num_10', emoji: '10', name: 'じゅう', bg: '#CCFBF1', border: '#0D9488', kind: 'number', numVal: 10, fill: '#0D9488' }
+        ]
+      };
+
+      const CATEGORY_ICONS = {
+        vehicles: '🚗',
+        animals: '🐶',
+        foods: '🍎',
+        numbers: '🔢'
+      };
+
+      const SCALE_FREQS = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25, 587.33, 659.25];
+
+      const state = {
+        tool: 'crayon', // crayon, sparkle, music, neon, kaleido, stamp, eraser
+        color: '#FF2A55',
+        brushSize: 22,
+        stampCategory: 'vehicles',
+        selectedStamp: STAMPS.vehicles[0],
+        stampSize: 84,
+        soundEnabled: true,
+        isFullscreenMode: false,
+        paperId: 'white',
+        bgPhotoImg: null,
+        bgPhotoDataUrl: null,
+        bgPhotoFit: 'cover', // 'cover' or 'contain'
+        undoStack: [],
+        maxUndo: 15,
+        album: [],
+        pointers: new Map(),
+        particles: [],
+        rocketAnim: null
+      };
+
+      // ==========================================
+      // 2. WEB AUDIO SYNTHESIZER (SOUND EFFECTS ONLY)
+      // ==========================================
+      let audioCtx = null;
+      function getAudioCtx() {
+        if (!state.soundEnabled) return null;
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+        return audioCtx;
+      }
+
+      function playTone(freq, type, duration, startTimeOffset = 0, vol = 0.16, endFreq = null) {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime + startTimeOffset;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type || 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+        if (endFreq !== null) {
+          osc.frequency.exponentialRampToValueAtTime(Math.max(20, endFreq), now + duration);
+        }
+        gain.gain.setValueAtTime(vol, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + duration);
+      }
+
+      function playUiClick() {
+        playTone(520, 'sine', 0.08, 0, 0.12, 680);
+      }
+
+      function playSparkleChime() {
+        const base = SCALE_FREQS[Math.floor(Math.random() * SCALE_FREQS.length)];
+        playTone(base * 2, 'triangle', 0.14, 0, 0.08, base * 2.5);
+      }
+
+      function playStampSound(stampObj) {
+        if (!state.soundEnabled || !stampObj) return;
+        const stampId = typeof stampObj === 'string' ? stampObj : stampObj.id;
+
+        if (stampObj.kind === 'number') {
+          const idx = Math.max(0, Math.min(9, (stampObj.numVal || 1) - 1));
+          const freq = SCALE_FREQS[idx];
+          playTone(freq, 'triangle', 0.18, 0, 0.16);
+          playTone(freq * 1.5, 'sine', 0.22, 0.08, 0.12);
+          return;
+        }
+
+        switch (stampId) {
+          case 'car':
+            playTone(380, 'sawtooth', 0.13, 0, 0.12);
+            playTone(380, 'sawtooth', 0.17, 0.16, 0.12);
+            break;
+          case 'police':
+            playTone(780, 'sine', 0.16, 0, 0.14);
+            playTone(580, 'sine', 0.16, 0.16, 0.14);
+            playTone(780, 'sine', 0.16, 0.32, 0.14);
+            playTone(580, 'sine', 0.18, 0.48, 0.14);
+            break;
+          case 'firetruck':
+            playTone(400, 'triangle', 0.30, 0, 0.14, 820);
+            playTone(820, 'triangle', 0.30, 0.30, 0.14, 450);
+            break;
+          case 'shinkansen':
+            playTone(523.25, 'sine', 0.11, 0, 0.14);
+            playTone(659.25, 'sine', 0.11, 0.11, 0.14);
+            playTone(783.99, 'sine', 0.20, 0.22, 0.14);
+            break;
+          case 'airplane':
+          case 'rocket':
+            playTone(150, 'sawtooth', 0.42, 0, 0.14, 720);
+            break;
+          case 'helicopter': {
+            const nowMs = Date.now();
+            if (state._lastHeliSound && nowMs - state._lastHeliSound < 220) break;
+            state._lastHeliSound = nowMs;
+            playTone(540, 'sine', 0.09, 0, 0.12, 720);
+            playTone(720, 'triangle', 0.12, 0.08, 0.11, 580);
+            break;
+          }
+          case 'ship':
+            playTone(130, 'sawtooth', 0.40, 0, 0.14, 125);
+            break;
+          case 'dog':
+            playTone(320, 'triangle', 0.10, 0, 0.17, 480);
+            playTone(340, 'triangle', 0.12, 0.14, 0.17, 500);
+            break;
+          case 'cat':
+            playTone(620, 'sine', 0.14, 0, 0.14, 880);
+            playTone(880, 'sine', 0.22, 0.14, 0.14, 540);
+            break;
+          case 'elephant':
+            playTone(280, 'sawtooth', 0.36, 0, 0.14, 620);
+            break;
+          case 'tiger':
+            playTone(190, 'sawtooth', 0.34, 0, 0.15, 95);
+            break;
+          case 'frog':
+            playTone(240, 'square', 0.08, 0, 0.11, 420);
+            playTone(260, 'square', 0.10, 0.11, 0.11, 460);
+            break;
+          case 'chick':
+            playTone(1200, 'sine', 0.08, 0, 0.12, 1600);
+            playTone(1300, 'sine', 0.09, 0.10, 0.12, 1700);
+            break;
+          case 'rabbit':
+            playTone(300, 'sine', 0.20, 0, 0.15, 780);
+            break;
+          case 'panda':
+            playTone(392, 'triangle', 0.12, 0, 0.14, 523.25);
+            playTone(523.25, 'triangle', 0.16, 0.12, 0.14, 659.25);
+            break;
+          default:
+            playTone(440, 'sine', 0.10, 0, 0.14, 660);
+            playTone(660, 'triangle', 0.14, 0.09, 0.14, 880);
+        }
+      }
+
+      // ==========================================
+      // 3. CANVAS SETUP & BACKGROUND (PASTEL PAPER + PHOTO)
+      // ==========================================
+      const stageEl = document.getElementById('canvasStage');
+      const bgCanvas = document.getElementById('bgCanvas');
+      const drawCanvas = document.getElementById('drawCanvas');
+      const fxCanvas = document.getElementById('fxCanvas');
+
+      const bgCtx = bgCanvas.getContext('2d');
+      const drawCtx = drawCanvas.getContext('2d');
+      const fxCtx = fxCanvas.getContext('2d');
+
+      function resizeCanvases() {
+        const rect = stageEl.getBoundingClientRect();
+        const w = Math.max(300, Math.floor(rect.width));
+        const h = Math.max(220, Math.floor(rect.height));
+
+        if (drawCanvas.width === w && drawCanvas.height === h) return;
+
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = drawCanvas.width || w;
+        tempCanvas.height = drawCanvas.height || h;
+        if (drawCanvas.width > 0 && drawCanvas.height > 0) {
+          tempCanvas.getContext('2d').drawImage(drawCanvas, 0, 0);
+        }
+
+        bgCanvas.width = w;
+        bgCanvas.height = h;
+        drawCanvas.width = w;
+        drawCanvas.height = h;
+        fxCanvas.width = w;
+        fxCanvas.height = h;
+
+        renderPaperBackground();
+        if (tempCanvas.width > 0 && tempCanvas.height > 0) {
+          drawCtx.drawImage(tempCanvas, 0, 0, tempCanvas.width, tempCanvas.height, 0, 0, w, h);
+        }
+      }
+
+      function renderPaperBackground() {
+        const w = bgCanvas.width;
+        const h = bgCanvas.height;
+        bgCtx.clearRect(0, 0, w, h);
+
+        const paperObj = PAPER_COLORS.find(p => p.id === state.paperId) || PAPER_COLORS[0];
+        bgCtx.fillStyle = paperObj.hex;
+        bgCtx.fillRect(0, 0, w, h);
+
+        if (state.paperId === 'photo' && state.bgPhotoImg) {
+          const img = state.bgPhotoImg;
+          const iw = img.naturalWidth || img.width;
+          const ih = img.naturalHeight || img.height;
+          if (iw > 0 && ih > 0) {
+            const scale = state.bgPhotoFit === 'contain'
+              ? Math.min(w / iw, h / ih)
+              : Math.max(w / iw, h / ih);
+            const dw = iw * scale;
+            const dh = ih * scale;
+            const dx = (w - dw) / 2;
+            const dy = (h - dh) / 2;
+            bgCtx.drawImage(img, dx, dy, dw, dh);
+          }
+        }
+      }
+
+      // ==========================================
+      // 4. UNDO HISTORY MANAGEMENT
+      // ==========================================
+      function pushUndoSnapshot() {
+        try {
+          if (drawCanvas.width === 0 || drawCanvas.height === 0) return;
+          const snapshot = drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height);
+          state.undoStack.push(snapshot);
+          if (state.undoStack.length > state.maxUndo) {
+            state.undoStack.shift();
+          }
+        } catch (e) {}
+      }
+
+      function performUndo() {
+        if (state.undoStack.length === 0) {
+          showToast('🌱', 'これいじょう もどれないよ');
+          playTone(220, 'sine', 0.15, 0, 0.12, 180);
+          return;
+        }
+        const snapshot = state.undoStack.pop();
+        drawCtx.putImageData(snapshot, 0, 0);
+        playTone(480, 'sine', 0.12, 0, 0.15, 320);
+        showToast('↩️', '1つ もどしたよ！');
+      }
+
+      // ==========================================
+      // 5. DRAWING & STAMPING ENGINE (ALWAYS MULTI-TOUCH)
+      // ==========================================
+      function getCanvasPoint(clientX, clientY) {
+        const rect = drawCanvas.getBoundingClientRect();
+        return {
+          x: (clientX - rect.left) * (drawCanvas.width / rect.width),
+          y: (clientY - rect.top) * (drawCanvas.height / rect.height)
+        };
+      }
+
+      function spawnParticles(x, y, count, colorHint) {
+        const emojis = ['✨', '⭐', '💛', '🌟', '♪', '💖'];
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 1.2 + Math.random() * 3.5;
+          state.particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 1.0,
+            size: 14 + Math.random() * 14,
+            alpha: 1,
+            color: colorHint || `hsl(${Math.floor(Math.random() * 360)}, 90%, 60%)`,
+            char: emojis[Math.floor(Math.random() * emojis.length)]
+          });
+        }
+      }
+
+      function drawStarShape(ctx, cx, cy, spikes, outerR, innerR, fillStyle) {
+        let rot = Math.PI / 2 * 3;
+        let x = cx;
+        let y = cy;
+        const step = Math.PI / spikes;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - outerR);
+        for (let i = 0; i < spikes; i++) {
+          x = cx + Math.cos(rot) * outerR;
+          y = cy + Math.sin(rot) * outerR;
+          ctx.lineTo(x, y);
+          rot += step;
+          x = cx + Math.cos(rot) * innerR;
+          y = cy + Math.sin(rot) * innerR;
+          ctx.lineTo(x, y);
+          rot += step;
+        }
+        ctx.lineTo(cx, cy - outerR);
+        ctx.closePath();
+        ctx.fillStyle = fillStyle;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function stampOnCanvas(x, y, stampObj) {
+        const size = state.stampSize;
+        const radius = size * 0.56;
+
+        drawCtx.save();
+        if (stampObj.kind === 'number') {
+          drawCtx.shadowColor = 'rgba(0, 0, 0, 0.22)';
+          drawCtx.shadowBlur = 10;
+          drawCtx.shadowOffsetY = 4;
+
+          drawCtx.beginPath();
+          drawCtx.arc(x, y, radius, 0, Math.PI * 2);
+          drawCtx.fillStyle = '#FFFFFF';
+          drawCtx.fill();
+
+          drawCtx.shadowColor = 'transparent';
+          drawCtx.beginPath();
+          drawCtx.arc(x, y, radius - 5, 0, Math.PI * 2);
+          drawCtx.fillStyle = stampObj.bg;
+          drawCtx.fill();
+          drawCtx.lineWidth = 4;
+          drawCtx.strokeStyle = stampObj.border;
+          drawCtx.stroke();
+
+          drawCtx.font = `900 ${Math.round(size * 0.62)}px "Rounded Mplus 1c", "Arial Rounded MT Bold", sans-serif`;
+          drawCtx.textAlign = 'center';
+          drawCtx.textBaseline = 'middle';
+          drawCtx.lineWidth = 6;
+          drawCtx.strokeStyle = '#FFFFFF';
+          drawCtx.strokeText(String(stampObj.numVal), x, y - 2);
+          drawCtx.fillStyle = stampObj.fill;
+          drawCtx.fillText(String(stampObj.numVal), x, y - 2);
+
+          drawCtx.font = `900 ${Math.max(10, Math.round(size * 0.16))}px sans-serif`;
+          drawCtx.textAlign = 'center';
+          drawCtx.textBaseline = 'middle';
+          drawCtx.fillStyle = '#1F2937';
+          drawCtx.strokeStyle = '#FFFFFF';
+          drawCtx.lineWidth = 4;
+          drawCtx.strokeText(stampObj.name, x, y + radius - 6);
+          drawCtx.fillText(stampObj.name, x, y + radius - 6);
+        } else {
+          drawCtx.font = `${Math.round(size * 0.88)}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
+          drawCtx.textAlign = 'center';
+          drawCtx.textBaseline = 'middle';
+          drawCtx.fillText(stampObj.emoji, x, y);
+        }
+        drawCtx.restore();
+
+        spawnParticles(x, y, 7, stampObj.border);
+        playStampSound(stampObj);
+      }
+
+      function getActiveStrokeColor(ptr, dist) {
+        if (state.color === 'RAINBOW') {
+          ptr.hue = (ptr.hue + Math.max(2.5, dist * 0.85)) % 360;
+          return `hsl(${ptr.hue}, 95%, 54%)`;
+        }
+        return state.color;
+      }
+
+      function drawSegment(ptr, newX, newY) {
+        const tool = state.tool;
+        const dx = newX - ptr.x;
+        const dy = newY - ptr.y;
+        const dist = Math.hypot(dx, dy);
+
+        drawCtx.save();
+        drawCtx.lineCap = 'round';
+        drawCtx.lineJoin = 'round';
+
+        if (tool === 'eraser') {
+          drawCtx.globalCompositeOperation = 'destination-out';
+          drawCtx.lineWidth = state.brushSize * 1.6;
+          drawCtx.beginPath();
+          drawCtx.moveTo(ptr.x, ptr.y);
+          drawCtx.lineTo(newX, newY);
+          drawCtx.stroke();
+        } else if (tool === 'crayon') {
+          drawCtx.strokeStyle = getActiveStrokeColor(ptr, dist);
+          drawCtx.lineWidth = state.brushSize;
+          drawCtx.beginPath();
+          drawCtx.moveTo(ptr.x, ptr.y);
+          drawCtx.lineTo(newX, newY);
+          drawCtx.stroke();
+        } else if (tool === 'neon') {
+          const glowCol = getActiveStrokeColor(ptr, dist);
+          drawCtx.strokeStyle = '#FFFFFF';
+          drawCtx.lineWidth = Math.max(4, state.brushSize * 0.45);
+          drawCtx.shadowColor = glowCol;
+          drawCtx.shadowBlur = state.brushSize * 1.1;
+          drawCtx.beginPath();
+          drawCtx.moveTo(ptr.x, ptr.y);
+          drawCtx.lineTo(newX, newY);
+          drawCtx.stroke();
+          drawCtx.stroke();
+        } else if (tool === 'sparkle') {
+          const col = getActiveStrokeColor(ptr, dist);
+          drawCtx.strokeStyle = col;
+          drawCtx.lineWidth = state.brushSize * 0.7;
+          drawCtx.shadowColor = '#FDE047';
+          drawCtx.shadowBlur = 10;
+          drawCtx.beginPath();
+          drawCtx.moveTo(ptr.x, ptr.y);
+          drawCtx.lineTo(newX, newY);
+          drawCtx.stroke();
+
+          ptr.sparkleDist += dist;
+          if (ptr.sparkleDist > 26) {
+            ptr.sparkleDist = 0;
+            const starColor = `hsl(${Math.floor(Math.random() * 360)}, 95%, 62%)`;
+            drawStarShape(
+              drawCtx,
+              newX + (Math.random() - 0.5) * state.brushSize * 1.4,
+              newY + (Math.random() - 0.5) * state.brushSize * 1.4,
+              5,
+              state.brushSize * 0.55,
+              state.brushSize * 0.25,
+              starColor
+            );
+            spawnParticles(newX, newY, 2, starColor);
+            playSparkleChime();
+          }
+        } else if (tool === 'music') {
+          ptr.hue = (ptr.hue + 5) % 360;
+          const noteColor = state.color === 'RAINBOW' ? `hsl(${ptr.hue}, 90%, 52%)` : state.color;
+          drawCtx.strokeStyle = noteColor;
+          drawCtx.lineWidth = state.brushSize * 0.65;
+          drawCtx.beginPath();
+          drawCtx.moveTo(ptr.x, ptr.y);
+          drawCtx.lineTo(newX, newY);
+          drawCtx.stroke();
+
+          ptr.noteDist += dist;
+          if (ptr.noteDist > 38) {
+            ptr.noteDist = 0;
+            const noteFreq = SCALE_FREQS[ptr.noteIdx % SCALE_FREQS.length];
+            ptr.noteIdx++;
+            playTone(noteFreq, 'triangle', 0.22, 0, 0.14);
+            const notes = ['♪', '♫', '♬', '🎵'];
+            const sym = notes[ptr.noteIdx % notes.length];
+            drawCtx.font = `bold ${Math.max(20, state.brushSize * 1.2)}px sans-serif`;
+            drawCtx.fillStyle = noteColor;
+            drawCtx.fillText(sym, newX - 10, newY - 8);
+            spawnParticles(newX, newY, 2, noteColor);
+          }
+        } else if (tool === 'kaleido') {
+          const cx = drawCanvas.width / 2;
+          const cy = drawCanvas.height / 2;
+          const sectors = 6;
+          drawCtx.strokeStyle = getActiveStrokeColor(ptr, dist);
+          drawCtx.lineWidth = Math.max(6, state.brushSize * 0.55);
+
+          const x1 = ptr.x - cx;
+          const y1 = ptr.y - cy;
+          const x2 = newX - cx;
+          const y2 = newY - cy;
+
+          for (let i = 0; i < sectors; i++) {
+            const angle = (Math.PI * 2 / sectors) * i;
+            drawCtx.save();
+            drawCtx.translate(cx, cy);
+            drawCtx.rotate(angle);
+            drawCtx.beginPath();
+            drawCtx.moveTo(x1, y1);
+            drawCtx.lineTo(x2, y2);
+            drawCtx.stroke();
+            drawCtx.restore();
+          }
+        } else if (tool === 'stamp') {
+          ptr.stampDist += dist;
+          if (ptr.stampDist > state.stampSize * 1.15) {
+            ptr.stampDist = 0;
+            stampOnCanvas(newX, newY, state.selectedStamp);
+          }
+        }
+
+        drawCtx.restore();
+        ptr.x = newX;
+        ptr.y = newY;
+      }
+
+      function startPointer(id, clientX, clientY) {
+        if (state.pointers.size === 0) {
+          pushUndoSnapshot();
+        }
+        const pt = getCanvasPoint(clientX, clientY);
+        const ptr = {
+          id,
+          x: pt.x,
+          y: pt.y,
+          hue: Math.floor(Math.random() * 360),
+          sparkleDist: 30,
+          noteDist: 40,
+          stampDist: 0,
+          noteIdx: Math.floor(Math.random() * SCALE_FREQS.length)
+        };
+        state.pointers.set(id, ptr);
+
+        if (state.tool === 'stamp') {
+          stampOnCanvas(pt.x, pt.y, state.selectedStamp);
+        } else {
+          drawSegment(ptr, pt.x + 0.1, pt.y + 0.1);
+        }
+      }
+
+      function movePointer(id, clientX, clientY) {
+        const ptr = state.pointers.get(id);
+        if (!ptr) return;
+        const pt = getCanvasPoint(clientX, clientY);
+        drawSegment(ptr, pt.x, pt.y);
+      }
+
+      function endPointer(id) {
+        state.pointers.delete(id);
+      }
+
+      drawCanvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          startPointer('t_' + t.identifier, t.clientX, t.clientY);
+        }
+      }, { passive: false });
+
+      drawCanvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          movePointer('t_' + t.identifier, t.clientX, t.clientY);
+        }
+      }, { passive: false });
+
+      drawCanvas.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          endPointer('t_' + t.identifier);
+        }
+      }, { passive: false });
+
+      drawCanvas.addEventListener('touchcancel', function(e) {
+        e.preventDefault();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          endPointer('t_' + t.identifier);
+        }
+      }, { passive: false });
+
+      drawCanvas.addEventListener('mousedown', function(e) {
+        if (e.button !== 0) return;
+        startPointer('mouse', e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mousemove', function(e) {
+        if (state.pointers.has('mouse')) {
+          movePointer('mouse', e.clientX, e.clientY);
+        }
+      });
+
+      window.addEventListener('mouseup', function() {
+        if (state.pointers.has('mouse')) {
+          endPointer('mouse');
+        }
+      });
+
+      window.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+
+      // ==========================================
+      // 6. ANIMATION LOOP (PARTICLES & ROCKET CLEAR)
+      // ==========================================
+      let animFrameId = null;
+      function updateEffects() {
+        fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+
+        for (let i = state.particles.length - 1; i >= 0; i--) {
+          const p = state.particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.08;
+          p.alpha -= 0.025;
+          if (p.alpha <= 0) {
+            state.particles.splice(i, 1);
+            continue;
+          }
+          fxCtx.save();
+          fxCtx.globalAlpha = Math.max(0, p.alpha);
+          fxCtx.font = `${Math.round(p.size)}px sans-serif`;
+          fxCtx.textAlign = 'center';
+          fxCtx.textBaseline = 'middle';
+          fxCtx.fillText(p.char, p.x, p.y);
+          fxCtx.restore();
+        }
+
+        if (state.rocketAnim) {
+          const r = state.rocketAnim;
+          r.progress += 0.032;
+          const x = r.progress * (fxCanvas.width + 220) - 100;
+          const y = fxCanvas.height / 2 + Math.sin(r.progress * 10) * 35;
+
+          drawCtx.clearRect(0, 0, Math.max(0, x), drawCanvas.height);
+
+          const rainbowCols = ['#FF2A55', '#FF7A00', '#FFD000', '#10B981', '#00B4D8', '#9333EA'];
+          for (let c = 0; c < rainbowCols.length; c++) {
+            fxCtx.fillStyle = rainbowCols[c];
+            fxCtx.globalAlpha = 0.65;
+            fxCtx.fillRect(0, (fxCanvas.height / 6) * c, Math.max(0, x - 20), fxCanvas.height / 6);
+          }
+
+          fxCtx.save();
+          fxCtx.globalAlpha = 1;
+          fxCtx.font = '96px sans-serif';
+          fxCtx.textAlign = 'center';
+          fxCtx.textBaseline = 'middle';
+          fxCtx.fillText('🚀', x, y);
+          fxCtx.restore();
+
+          spawnParticles(x - 30, y, 3);
+
+          if (r.progress >= 1.15) {
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            state.rocketAnim = null;
+            showToast('✨', 'ピカピカに なったよ！');
+          }
+        }
+
+        animFrameId = requestAnimationFrame(updateEffects);
+      }
+
+      // ==========================================
+      // 7. UI CONTROLS, PAPER COLORS & INDEPENDENT PHOTO MODAL
+      // ==========================================
+      function showToast(emoji, text) {
+        const banner = document.getElementById('toastBanner');
+        document.getElementById('toastEmoji').textContent = emoji;
+        document.getElementById('toastText').textContent = text;
+        banner.classList.add('show');
+        clearTimeout(banner._timer);
+        banner._timer = setTimeout(function() {
+          banner.classList.remove('show');
+        }, 2300);
+      }
+
+      function selectTool(toolName) {
+        state.tool = toolName;
+        const toolButtons = document.querySelectorAll('.tool-btn');
+        toolButtons.forEach(function(btn) {
+          btn.classList.toggle('active', btn.getAttribute('data-tool') === toolName);
+        });
+
+        const paletteSec = document.getElementById('paletteSection');
+        const stampSec = document.getElementById('stampSection');
+        if (toolName === 'stamp') {
+          paletteSec.style.display = 'none';
+          stampSec.style.display = 'flex';
+        } else {
+          paletteSec.style.display = 'flex';
+          stampSec.style.display = 'none';
+        }
+        playUiClick();
+      }
+
+      function renderColorGrid() {
+        const grid = document.getElementById('colorGrid');
+        grid.innerHTML = '';
+        COLORS.forEach(function(c) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          if (c.isRainbow) {
+            btn.className = 'color-swatch rainbow-swatch' + (state.color === c.hex ? ' active' : '');
+            btn.innerHTML = '<span>🌈</span><span>にじいろ</span>';
+          } else {
+            btn.className = 'color-swatch' + (state.color === c.hex ? ' active' : '');
+            btn.style.backgroundColor = c.hex;
+            if (c.hex === '#FFFFFF') {
+              btn.style.border = '4px solid #D1D5DB';
+            }
+          }
+          btn.title = c.name;
+          btn.setAttribute('aria-label', c.name);
+          btn.addEventListener('click', function() {
+            state.color = c.hex;
+            if (state.tool === 'eraser' || state.tool === 'stamp') {
+              selectTool('crayon');
+            }
+            renderColorGrid();
+            playUiClick();
+          });
+          grid.appendChild(btn);
+        });
+      }
+
+      function renderStampGrid() {
+        const grid = document.getElementById('stampGrid');
+        grid.innerHTML = '';
+        const list = STAMPS[state.stampCategory] || STAMPS.vehicles;
+        list.forEach(function(st) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'stamp-item' + (state.selectedStamp.id === st.id ? ' active' : '');
+          if (st.kind === 'number') {
+            btn.innerHTML = `<span class="stamp-emoji" style="color:${st.fill}; font-size:24px;">${st.numVal}</span><span class="stamp-label">${st.name}</span>`;
+          } else {
+            btn.innerHTML = `<span class="stamp-emoji">${st.emoji}</span><span class="stamp-label">${st.name}</span>`;
+          }
+          btn.addEventListener('click', function() {
+            state.selectedStamp = st;
+            selectTool('stamp');
+            renderStampGrid();
+            playStampSound(st);
+          });
+          grid.appendChild(btn);
+        });
+      }
+
+      function renderPaperModal() {
+        const grid = document.getElementById('templateGrid');
+        grid.innerHTML = '';
+
+        PAPER_COLORS.forEach(function(p) {
+          const card = document.createElement('button');
+          card.type = 'button';
+          card.className = 'kid-btn';
+          card.style.flexDirection = 'column';
+          card.style.padding = '12px 10px';
+          card.style.height = '104px';
+          card.style.background = p.hex;
+          card.style.borderColor = state.paperId === p.id ? '#FF595E' : p.border;
+          if (state.paperId === p.id) {
+            card.style.boxShadow = '0 0 0 3px #FFCA3A, 0 4px 0 rgba(0,0,0,0.18)';
+          }
+          card.innerHTML = `
+            <span style="display:inline-block; width:36px; height:36px; border-radius:50%; background:${p.hex}; border:3px solid ${p.border}; box-shadow:inset 0 2px 4px rgba(0,0,0,0.08);"></span>
+            <span style="font-size:13px; font-weight:900; margin-top:6px; color:${p.textColor};">${p.title}</span>
+          `;
+          card.addEventListener('click', function() {
+            state.paperId = p.id;
+            renderPaperBackground();
+            document.getElementById('coloringModal').classList.remove('open');
+            playUiClick();
+            showToast('📄', `「${p.title}」に したよ！`);
+          });
+          grid.appendChild(card);
+        });
+      }
+
+      function updatePhotoModalUI() {
+        document.getElementById('btnFitCover').classList.toggle('active', state.bgPhotoFit === 'cover');
+        document.getElementById('btnFitContain').classList.toggle('active', state.bgPhotoFit === 'contain');
+        const previewWrap = document.getElementById('currentPhotoPreviewWrap');
+        const previewImg = document.getElementById('currentPhotoPreviewImg');
+        if (state.bgPhotoDataUrl) {
+          previewWrap.style.display = 'flex';
+          previewImg.src = state.bgPhotoDataUrl;
+        } else {
+          previewWrap.style.display = 'none';
+        }
+      }
+
+      function handlePhotoFileSelected(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const dataUrl = evt.target.result;
+          const img = new Image();
+          img.onload = function() {
+            state.bgPhotoImg = img;
+            state.bgPhotoDataUrl = dataUrl;
+            state.paperId = 'photo';
+            renderPaperBackground();
+            updatePhotoModalUI();
+            document.getElementById('photoModal').classList.remove('open');
+            playSparkleChime();
+            showToast('📷', 'しゃしんを 背景にしたよ！');
+          };
+          img.src = dataUrl;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // ==========================================
+      // 8. COMPOSITE EXPORT & ALBUM STORAGE
+      // ==========================================
+      function createCompositeDataUrl() {
+        const comp = document.createElement('canvas');
+        comp.width = drawCanvas.width;
+        comp.height = drawCanvas.height;
+        const cctx = comp.getContext('2d');
+
+        cctx.drawImage(bgCanvas, 0, 0);
+        cctx.drawImage(drawCanvas, 0, 0);
+        return Promise.resolve(comp.toDataURL('image/png'));
+      }
+
+      function loadAlbumFromStorage() {
+        try {
+          const raw = localStorage.getItem('wakuwaku_oekaki_album_v1');
+          if (raw) {
+            state.album = JSON.parse(raw);
+          }
+        } catch (e) {
+          state.album = [];
+        }
+        updateAlbumBadge();
+      }
+
+      function saveAlbumToStorage() {
+        try {
+          localStorage.setItem('wakuwaku_oekaki_album_v1', JSON.stringify(state.album));
+        } catch (e) {}
+        updateAlbumBadge();
+      }
+
+      function updateAlbumBadge() {
+        document.getElementById('albumCount').textContent = String(state.album.length);
+      }
+
+      async function saveCurrentArtwork() {
+        playTone(900, 'triangle', 0.06, 0, 0.15);
+        playTone(1200, 'sine', 0.10, 0.06, 0.15);
+        const flash = document.getElementById('flashOverlay');
+        flash.style.opacity = '0.85';
+        setTimeout(function() { flash.style.opacity = '0'; }, 180);
+
+        const dataUrl = await createCompositeDataUrl();
+        const drawingOnlyUrl = drawCanvas.toDataURL('image/png');
+        const now = new Date();
+        const timeStr = `${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+        state.album.unshift({
+          id: 'art_' + Date.now(),
+          time: timeStr,
+          previewUrl: dataUrl,
+          drawingUrl: drawingOnlyUrl,
+          paperId: state.paperId,
+          bgPhotoDataUrl: state.paperId === 'photo' ? state.bgPhotoDataUrl : null
+        });
+        if (state.album.length > 12) {
+          state.album.pop();
+        }
+        saveAlbumToStorage();
+        showToast('📸', 'アルバムに ほぞんしたよ！');
+      }
+
+      async function downloadDataUrl(dataUrl, filename) {
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = filename || 'oekaki.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('📥', 'タブレットに ほぞんしたよ！');
+      }
+
+      function renderAlbumModal() {
+        const grid = document.getElementById('albumGrid');
+        grid.innerHTML = '';
+
+        if (state.album.length === 0) {
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align:center; padding:32px; color:#6B7280; font-weight:800;">
+              <div style="font-size:48px; margin-bottom:8px;">🎨</div>
+              まだ ほぞんされた おえかきが ないよ。<br>上の「📸 ほぞん」ボタンをおしてね！
+            </div>
+          `;
+          return;
+        }
+
+        state.album.forEach(function(item) {
+          const card = document.createElement('div');
+          card.style.border = '3px solid #E5E7EB';
+          card.style.borderRadius = '18px';
+          card.style.padding = '10px';
+          card.style.background = '#F9FAFB';
+          card.style.display = 'flex';
+          card.style.flexDirection = 'column';
+          card.style.gap = '8px';
+
+          const img = document.createElement('img');
+          img.src = item.previewUrl;
+          img.alt = 'ほぞんした絵';
+          img.style.width = '100%';
+          img.style.height = '130px';
+          img.style.objectFit = 'contain';
+          img.style.background = '#FFFFFF';
+          img.style.borderRadius = '12px';
+          img.style.border = '2px solid #E5E7EB';
+
+          const meta = document.createElement('div');
+          meta.style.fontSize = '12px';
+          meta.style.fontWeight = '800';
+          meta.style.color = '#4B5563';
+          meta.style.textAlign = 'center';
+          meta.textContent = item.time;
+
+          const btnRow = document.createElement('div');
+          btnRow.style.display = 'flex';
+          btnRow.style.gap = '6px';
+
+          const loadBtn = document.createElement('button');
+          loadBtn.type = 'button';
+          loadBtn.className = 'kid-btn';
+          loadBtn.style.flex = '1';
+          loadBtn.style.padding = '6px';
+          loadBtn.style.fontSize = '12px';
+          loadBtn.style.background = '#ECFDF5';
+          loadBtn.textContent = '✏️ ひらく';
+          loadBtn.addEventListener('click', function() {
+            pushUndoSnapshot();
+            state.paperId = item.paperId || 'white';
+            if (state.paperId === 'photo' && item.bgPhotoDataUrl) {
+              const bgImg = new Image();
+              bgImg.onload = function() {
+                state.bgPhotoImg = bgImg;
+                state.bgPhotoDataUrl = item.bgPhotoDataUrl;
+                renderPaperBackground();
+              };
+              bgImg.src = item.bgPhotoDataUrl;
+            } else {
+              renderPaperBackground();
+            }
+
+            const restoreImg = new Image();
+            restoreImg.onload = function() {
+              drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+              drawCtx.drawImage(restoreImg, 0, 0, drawCanvas.width, drawCanvas.height);
+              document.getElementById('albumModal').classList.remove('open');
+              showToast('✏️', 'つづきから かけるよ！');
+            };
+            restoreImg.src = item.drawingUrl || item.previewUrl;
+          });
+
+          const dlBtn = document.createElement('button');
+          dlBtn.type = 'button';
+          dlBtn.className = 'kid-btn';
+          dlBtn.style.padding = '6px 8px';
+          dlBtn.style.fontSize = '12px';
+          dlBtn.style.background = '#EFF6FF';
+          dlBtn.textContent = '📥';
+          dlBtn.title = '画像ファイルとしてダウンロード';
+          dlBtn.addEventListener('click', function() {
+            downloadDataUrl(item.previewUrl, `oekaki_${item.id}.png`);
+          });
+
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'kid-btn';
+          delBtn.style.padding = '6px 8px';
+          delBtn.style.fontSize = '12px';
+          delBtn.style.background = '#FEF2F2';
+          delBtn.textContent = '🗑️';
+          delBtn.addEventListener('click', function() {
+            state.album = state.album.filter(a => a.id !== item.id);
+            saveAlbumToStorage();
+            renderAlbumModal();
+          });
+
+          btnRow.appendChild(loadBtn);
+          btnRow.appendChild(dlBtn);
+          btnRow.appendChild(delBtn);
+
+          card.appendChild(img);
+          card.appendChild(meta);
+          card.appendChild(btnRow);
+          grid.appendChild(card);
+        });
+      }
+
+      // ==========================================
+      // 9. EVENT BINDINGS & FULLSCREEN 2-SEC HOLD LOCK
+      // ==========================================
+      function bindEvents() {
+        document.querySelectorAll('.tool-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            selectTool(btn.getAttribute('data-tool'));
+          });
+        });
+
+        document.querySelectorAll('[data-size]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            state.brushSize = Number(btn.getAttribute('data-size'));
+            document.querySelectorAll('[data-size]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            playUiClick();
+          });
+        });
+
+        document.querySelectorAll('[data-stampsize]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            state.stampSize = Number(btn.getAttribute('data-stampsize'));
+            document.querySelectorAll('[data-stampsize]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            playUiClick();
+          });
+        });
+
+        document.querySelectorAll('.stamp-tab').forEach(function(tab) {
+          tab.addEventListener('click', function() {
+            const cat = tab.getAttribute('data-cat');
+            state.stampCategory = cat;
+            document.querySelectorAll('.stamp-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            state.selectedStamp = STAMPS[cat][0];
+            document.getElementById('leftStampIcon').textContent = CATEGORY_ICONS[cat] || '🚗';
+            renderStampGrid();
+            playUiClick();
+          });
+        });
+
+        document.getElementById('btnUndo').addEventListener('click', performUndo);
+
+        // Paper Color Modal (independent)
+        document.getElementById('btnColoringModal').addEventListener('click', function() {
+          renderPaperModal();
+          document.getElementById('coloringModal').classList.add('open');
+          playUiClick();
+        });
+        document.getElementById('btnCloseColoringModal').addEventListener('click', function() {
+          document.getElementById('coloringModal').classList.remove('open');
+          playUiClick();
+        });
+
+        // Photo Modal (independent, with photo picker + size switching)
+        const photoInput = document.getElementById('photoFileInput');
+        document.getElementById('btnQuickPhoto').addEventListener('click', function() {
+          updatePhotoModalUI();
+          document.getElementById('photoModal').classList.add('open');
+          playUiClick();
+        });
+        document.getElementById('btnClosePhotoModal').addEventListener('click', function() {
+          document.getElementById('photoModal').classList.remove('open');
+          playUiClick();
+        });
+        document.getElementById('btnModalPickPhoto').addEventListener('click', function() {
+          playUiClick();
+          photoInput.click();
+        });
+        photoInput.addEventListener('change', function(e) {
+          const file = e.target.files && e.target.files[0];
+          if (file) {
+            handlePhotoFileSelected(file);
+          }
+          photoInput.value = '';
+        });
+
+        document.getElementById('btnFitCover').addEventListener('click', function() {
+          state.bgPhotoFit = 'cover';
+          updatePhotoModalUI();
+          if (state.bgPhotoImg) {
+            state.paperId = 'photo';
+            renderPaperBackground();
+          }
+          playUiClick();
+          showToast('🖼️', '画面いっぱいに 広げたよ');
+        });
+
+        document.getElementById('btnFitContain').addEventListener('click', function() {
+          state.bgPhotoFit = 'contain';
+          updatePhotoModalUI();
+          if (state.bgPhotoImg) {
+            state.paperId = 'photo';
+            renderPaperBackground();
+          }
+          playUiClick();
+          showToast('📐', '写真ぜんたいを 表示したよ');
+        });
+
+        document.getElementById('btnUseLoadedPhoto').addEventListener('click', function() {
+          if (state.bgPhotoImg) {
+            state.paperId = 'photo';
+            renderPaperBackground();
+            document.getElementById('photoModal').classList.remove('open');
+            playUiClick();
+            showToast('📷', 'しゃしんを 背景にしたよ！');
+          }
+        });
+
+        document.getElementById('btnSoundToggle').addEventListener('click', function() {
+          state.soundEnabled = !state.soundEnabled;
+          document.getElementById('soundEmoji').textContent = state.soundEnabled ? '🔊' : '🔇';
+          document.getElementById('soundLabel').textContent = state.soundEnabled ? 'おと ON' : 'おと OFF';
+          if (state.soundEnabled) playUiClick();
+          showToast(state.soundEnabled ? '🔊' : '🔇', state.soundEnabled ? 'こうかおん ON♪' : 'おとを けしたよ');
+        });
+
+        document.getElementById('btnSaveArt').addEventListener('click', saveCurrentArtwork);
+        document.getElementById('btnOpenAlbum').addEventListener('click', function() {
+          renderAlbumModal();
+          document.getElementById('albumModal').classList.add('open');
+          playUiClick();
+        });
+        document.getElementById('btnCloseAlbumModal').addEventListener('click', function() {
+          document.getElementById('albumModal').classList.remove('open');
+          playUiClick();
+        });
+
+        document.getElementById('btnRocketClear').addEventListener('click', function() {
+          playUiClick();
+          document.getElementById('clearModal').classList.add('open');
+        });
+        document.getElementById('btnCancelClear').addEventListener('click', function() {
+          playUiClick();
+          document.getElementById('clearModal').classList.remove('open');
+        });
+        document.getElementById('btnConfirmRocketClear').addEventListener('click', function() {
+          document.getElementById('clearModal').classList.remove('open');
+          pushUndoSnapshot();
+          playStampSound('rocket');
+          state.rocketAnim = { progress: 0 };
+        });
+
+        // Fullscreen Button: 1-tap to enter fullscreen, double-tap required to exit ("もとにもどす")
+        const fsBtn = document.getElementById('btnFullscreen');
+        const fsEmoji = document.getElementById('fullscreenEmoji');
+        const fsLabel = document.getElementById('fullscreenLabel');
+        const fsBar = document.getElementById('fullscreenHoldBar');
+        let lastExitTapTime = 0;
+        let doubleTapResetTimer = null;
+        const DOUBLE_TAP_WINDOW_MS = 500;
+
+        function updateFullscreenButtonUI() {
+          if (state.isFullscreenMode) {
+            fsEmoji.textContent = '🔒';
+            fsLabel.textContent = 'もとにもどす(2かいタップ)';
+            fsBtn.style.background = '#FEF2F2';
+            fsBtn.style.borderColor = '#EF4444';
+          } else {
+            fsEmoji.textContent = '📺';
+            fsLabel.textContent = 'ぜんがめん';
+            fsBtn.style.background = '#F0FDF4';
+            fsBtn.style.borderColor = '#22C55E';
+            fsBar.style.width = '0%';
+          }
+        }
+
+        function enterFullscreenMode() {
+          state.isFullscreenMode = true;
+          lastExitTapTime = 0;
+          const docEl = document.documentElement;
+          if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            if (docEl.requestFullscreen) {
+              docEl.requestFullscreen().catch(() => {});
+            } else if (docEl.webkitRequestFullscreen) {
+              docEl.webkitRequestFullscreen();
+            }
+          }
+          updateFullscreenButtonUI();
+          playUiClick();
+          showToast('📺', 'ぜんがめんにしたよ！（戻すときはダブルタップ）');
+        }
+
+        function exitFullscreenMode() {
+          state.isFullscreenMode = false;
+          lastExitTapTime = 0;
+          clearTimeout(doubleTapResetTimer);
+          if (document.fullscreenElement || document.webkitFullscreenElement) {
+            if (document.exitFullscreen) {
+              document.exitFullscreen().catch(() => {});
+            } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+            }
+          }
+          updateFullscreenButtonUI();
+          playUiClick();
+          showToast('🔓', 'ぜんがめんを 解除しました');
+        }
+
+        fsBtn.addEventListener('click', function() {
+          if (!state.isFullscreenMode) {
+            enterFullscreenMode();
+            return;
+          }
+          const now = Date.now();
+          if (now - lastExitTapTime <= DOUBLE_TAP_WINDOW_MS) {
+            exitFullscreenMode();
+          } else {
+            lastExitTapTime = now;
+            fsBar.style.width = '100%';
+            playUiClick();
+            showToast('🔒', 'トントン！と 2かい連続でタップすると戻るよ');
+            clearTimeout(doubleTapResetTimer);
+            doubleTapResetTimer = setTimeout(function() {
+              lastExitTapTime = 0;
+              fsBar.style.width = '0%';
+            }, DOUBLE_TAP_WINDOW_MS);
+          }
+        });
+
+        document.addEventListener('fullscreenchange', function() {
+          if (!document.fullscreenElement && state.isFullscreenMode) {
+            state.isFullscreenMode = false;
+            updateFullscreenButtonUI();
+          }
+        });
+
+        document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+          backdrop.addEventListener('click', function(e) {
+            if (e.target === backdrop) {
+              backdrop.classList.remove('open');
+            }
+          });
+        });
+
+        window.addEventListener('resize', function() {
+          resizeCanvases();
+        });
+      }
+
+      // ==========================================
+      // 10. BOOTSTRAP ON LOAD
+      // ==========================================
+      window.addEventListener('load', function() {
+        renderColorGrid();
+        renderStampGrid();
+        loadAlbumFromStorage();
+        bindEvents();
+        resizeCanvases();
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+        animFrameId = requestAnimationFrame(updateEffects);
+      });
+    })();
+  </script>
+</body>
+</html>
