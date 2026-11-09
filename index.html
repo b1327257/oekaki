@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
+  <script>(function(){try{if(Math.min(screen.width,screen.height)<600)document.documentElement.classList.add('phone');}catch(e){}})();</script>
   <title>わくわく！おえかき＆スタンプランド（3さい〜・Fireタブレット対応）</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <style>
@@ -44,6 +45,7 @@
       width: 100vw;
       height: 100vh;
       height: 100dvh;
+      padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
       overflow: hidden;
       background: linear-gradient(135deg, #FFE6A7 0%, #FFD1DC 50%, #C8F4F9 100%);
     }
@@ -60,12 +62,25 @@
       gap: 6px;
       flex-shrink: 0;
       z-index: 30;
+    }
+    .top-scroll {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex: 1;
+      min-width: 0;
       overflow-x: auto;
       scrollbar-width: none;
     }
-    .top-bar::-webkit-scrollbar {
+    .top-scroll::-webkit-scrollbar {
       display: none;
     }
+    #btnFullscreen {
+      flex-shrink: 0;
+      min-width: 128px;
+    }
+    .album-badge { display: none; }
 
     .top-group {
       display: flex;
@@ -571,6 +586,101 @@
         font-size: 17px;
       }
     }
+
+    /* =====================================================
+       スマホ最適化（画面の短辺が600px未満の端末）
+       ===================================================== */
+    html.phone #btnFullscreen { display: none !important; }
+
+    html.phone .top-bar { padding: 4px 6px; border-bottom-width: 3px; gap: 4px; }
+    html.phone .top-scroll, html.phone .top-group { gap: 5px; }
+    html.phone .top-bar .kid-btn {
+      width: 46px; height: 46px; padding: 0; border-radius: 14px;
+      border-width: 2px; box-shadow: 0 3px 0 rgba(0,0,0,0.14);
+    }
+    html.phone .top-bar .kid-btn .lbl { display: none; }
+    html.phone .top-bar .kid-btn .btn-emoji { font-size: 23px; }
+    html.phone .album-badge {
+      display: flex; position: absolute; top: -6px; right: -6px;
+      min-width: 20px; height: 20px; padding: 0 4px; border-radius: 10px;
+      background: #8B5CF6; color: #FFFFFF; font-size: 11px; font-weight: 900;
+      align-items: center; justify-content: center; border: 2px solid #FFFFFF;
+    }
+
+    html.phone .workspace { padding: 6px; gap: 6px; }
+    html.phone .canvas-stage { border-width: 3px; border-radius: 18px; }
+    html.phone .left-panel, html.phone .right-panel { border-width: 2px; border-radius: 18px; padding: 4px; }
+
+    html.phone .tool-btn {
+      min-height: 44px; padding: 2px; font-size: 9px; border-width: 2px;
+      border-radius: 12px; box-shadow: 0 2px 0 #D1D5DB;
+    }
+    html.phone .tool-btn .tool-icon { font-size: 22px; margin: 0; }
+
+    html.phone #paletteSection > div:first-child,
+    html.phone #stampSection > div:first-child,
+    html.phone .size-selector > div:first-child { display: none; }
+    html.phone #paletteSection, html.phone #stampSection { gap: 5px !important; }
+    html.phone .color-grid { gap: 5px; }
+    html.phone .color-swatch { border-width: 3px; }
+    html.phone .color-swatch.rainbow-swatch { aspect-ratio: auto; height: auto; font-size: 11px; letter-spacing: 0; }
+    html.phone .size-selector { flex-direction: row; margin: 0; padding: 0; border-top: 0; gap: 5px; }
+    html.phone .size-btn { flex: 1; min-height: 34px; padding: 4px; font-size: 11px; border-radius: 12px; }
+    html.phone .stamp-tabs { gap: 4px; padding: 3px; border-width: 1px; }
+    html.phone .stamp-tab { min-height: 40px; padding: 2px; border-width: 2px; border-radius: 12px; box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
+    html.phone .stamp-tab > span:last-child { display: none; }
+    html.phone .stamp-tab .cat-icon { font-size: 22px; margin: 0; }
+    html.phone .stamp-tab .num-badge-icon { margin: 0; }
+    html.phone .stamp-item { min-height: 44px; padding: 2px; border-width: 2px; }
+    html.phone .stamp-item .stamp-label { display: none; }
+    html.phone .stamp-item .stamp-emoji { font-size: 24px; }
+
+    html.phone .modal-backdrop { padding: 8px; }
+    html.phone .modal-card { max-height: 92vh; border-width: 4px; border-radius: 22px; }
+    html.phone .modal-header { padding: 10px 12px; }
+    html.phone .modal-body { padding: 12px; }
+    html.phone #albumGrid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important; gap: 10px !important; }
+    html.phone #templateGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    html.phone .fit-row { flex-direction: column; }
+    html.phone #toastBanner {
+      bottom: auto; top: calc(58px + env(safe-area-inset-top, 0px));
+      transform: translateX(-50%) translateY(-160px);
+      white-space: normal; text-align: center; max-width: 92vw;
+      font-size: 14px; padding: 10px 16px; border-radius: 20px;
+    }
+    html.phone #toastBanner.show { transform: translateX(-50%) translateY(0); }
+
+    /* スマホ・縦持ち：キャンバスを上、道具を下に横並び */
+    @media (orientation: portrait) {
+      html.phone .workspace { flex-direction: column; }
+      html.phone .canvas-stage { order: 1; }
+      html.phone .left-panel {
+        order: 2; flex-direction: row; width: auto; height: 60px; flex-shrink: 0;
+        overflow-x: auto; overflow-y: hidden; gap: 5px;
+      }
+      html.phone .tool-btn { flex: 0 0 58px; min-height: 0; height: 100%; }
+      html.phone .right-panel { order: 3; width: auto; height: 150px; flex-shrink: 0; overflow-y: auto; }
+      html.phone .color-grid { grid-template-columns: repeat(7, 1fr); }
+      html.phone .color-swatch.rainbow-swatch { grid-column: span 2; }
+      html.phone .stamp-tabs { grid-template-columns: repeat(4, 1fr); }
+      html.phone .stamp-grid { display: flex; overflow-x: auto; scrollbar-width: none; gap: 5px; }
+      html.phone .stamp-grid::-webkit-scrollbar { display: none; }
+      html.phone .stamp-item { flex: 0 0 56px; }
+    }
+
+    /* スマホ・横持ち：左に道具、右に色（コンパクト） */
+    @media (orientation: landscape) {
+      html.phone .left-panel { width: 64px; gap: 4px; }
+      html.phone .right-panel { width: 128px; }
+      html.phone .color-grid { grid-template-columns: repeat(3, 1fr); }
+      html.phone .color-swatch.rainbow-swatch { grid-column: 1 / -1; height: 32px; }
+      html.phone .size-btn > span:last-child { display: none; }
+      html.phone .stamp-tabs { grid-template-columns: repeat(2, 1fr); }
+      html.phone .stamp-grid { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+      html.phone .stamp-item { min-height: 40px; }
+      html.phone .stamp-item .stamp-emoji { font-size: 20px; }
+      html.phone .stampsize-row { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
@@ -581,50 +691,49 @@
   <div class="app-shell" id="appShell">
     <!-- Top Control Bar -->
     <header class="top-bar">
-      <div class="top-group">
-        <button type="button" class="kid-btn" id="btnUndo" title="1つ前に戻す">
-          <span class="btn-emoji">↩️</span>
-          <span>もどる</span>
-        </button>
+      <div class="top-scroll">
+        <div class="top-group">
+          <button type="button" class="kid-btn" id="btnUndo" title="1つ前に戻す">
+            <span class="btn-emoji">↩️</span>
+            <span class="lbl">もどる</span>
+          </button>
 
-        <button type="button" class="kid-btn" id="btnColoringModal" style="background:#FFFBEB; border-color:#F59E0B;">
-          <span class="btn-emoji">📄</span>
-          <span>かみのいろ</span>
-        </button>
+          <button type="button" class="kid-btn" id="btnColoringModal" title="かみのいろ" style="background:#FFFBEB; border-color:#F59E0B;">
+            <span class="btn-emoji">📄</span>
+            <span class="lbl">かみのいろ</span>
+          </button>
 
-        <button type="button" class="kid-btn" id="btnQuickPhoto" style="background:#ECFDF5; border-color:#10B981;">
-          <span class="btn-emoji">📷</span>
-          <span>しゃしんをえらぶ</span>
-        </button>
+          <button type="button" class="kid-btn" id="btnQuickPhoto" title="しゃしんをえらぶ" style="background:#ECFDF5; border-color:#10B981;">
+            <span class="btn-emoji">📷</span>
+            <span class="lbl">しゃしんをえらぶ</span>
+          </button>
+        </div>
+
+        <div class="top-group">
+          <button type="button" class="kid-btn" id="btnSaveArt" title="ほぞん" style="background:#FDF2F8; border-color:#EC4899;">
+            <span class="btn-emoji">📸</span>
+            <span class="lbl">ほぞん</span>
+          </button>
+
+          <button type="button" class="kid-btn" id="btnOpenAlbum" title="アルバム" style="background:#F3E8FF; border-color:#8B5CF6;">
+            <span class="btn-emoji">🖼️</span>
+            <span class="lbl">アルバム (<span id="albumCount">0</span>)</span>
+            <span class="album-badge" id="albumBadge">0</span>
+          </button>
+
+          <button type="button" class="kid-btn" id="btnRocketClear" title="ぜんけし" style="background:#FEF2F2; border-color:#EF4444; color:#DC2626;">
+            <span class="btn-emoji">🚀</span>
+            <span class="lbl">ぜんけし</span>
+          </button>
+        </div>
       </div>
 
-      <div class="top-group">
-        <button type="button" class="kid-btn" id="btnSoundToggle" style="background:#EFF6FF; border-color:#3B82F6;">
-          <span class="btn-emoji" id="soundEmoji">🔊</span>
-          <span id="soundLabel">おと ON</span>
-        </button>
-
-        <button type="button" class="kid-btn" id="btnSaveArt" style="background:#FDF2F8; border-color:#EC4899;">
-          <span class="btn-emoji">📸</span>
-          <span>ほぞん</span>
-        </button>
-
-        <button type="button" class="kid-btn" id="btnOpenAlbum" style="background:#F3E8FF; border-color:#8B5CF6;">
-          <span class="btn-emoji">🖼️</span>
-          <span>アルバム (<span id="albumCount">0</span>)</span>
-        </button>
-
-        <button type="button" class="kid-btn" id="btnRocketClear" style="background:#FEF2F2; border-color:#EF4444; color:#DC2626;">
-          <span class="btn-emoji">🚀</span>
-          <span>ぜんけし</span>
-        </button>
-
-        <button type="button" class="kid-btn" id="btnFullscreen" style="background:#F0FDF4; border-color:#22C55E; overflow:hidden;">
-          <span class="btn-emoji" id="fullscreenEmoji">📺</span>
-          <span id="fullscreenLabel">ぜんがめん</span>
-          <div class="hold-progress-bar" id="fullscreenHoldBar"></div>
-        </button>
-      </div>
+      <!-- 全画面ボタン：右上固定（タブレットのみ。スマホでは非表示） -->
+      <button type="button" class="kid-btn" id="btnFullscreen" style="background:#F0FDF4; border-color:#22C55E; overflow:hidden;">
+        <span class="btn-emoji" id="fullscreenEmoji">📺</span>
+        <span id="fullscreenLabel">ぜんがめん</span>
+        <div class="hold-progress-bar" id="fullscreenHoldBar"></div>
+      </button>
     </header>
 
     <!-- Main Drawing Workspace -->
@@ -718,7 +827,7 @@
 
           <div class="size-selector">
             <div style="text-align:center; font-size:11px; font-weight:900; color:#4B5563;">スタンプのおおきさ</div>
-            <div style="display:flex; gap:4px;">
+            <div class="stampsize-row" style="display:flex; gap:4px;">
               <button type="button" class="size-btn" data-stampsize="56" id="stampSizeSmall" style="flex:1; padding:5px 2px; font-size:11px;">ちいさい</button>
               <button type="button" class="size-btn active" data-stampsize="84" id="stampSizeMedium" style="flex:1; padding:5px 2px; font-size:11px;">ふつう</button>
               <button type="button" class="size-btn" data-stampsize="118" id="stampSizeLarge" style="flex:1; padding:5px 2px; font-size:11px;">おおきい</button>
@@ -770,7 +879,7 @@
           <div style="font-size:14px; font-weight:900; color:#374151; text-align:center;">
             🔄 しゃしんの サイズ切り替え
           </div>
-          <div style="display:flex; gap:10px;">
+          <div class="fit-row" style="display:flex; gap:10px;">
             <button type="button" class="kid-btn active" id="btnFitCover" style="flex:1; padding:10px; font-size:13px;">
               🖼️ 画面いっぱいに広げる
             </button>
@@ -829,6 +938,10 @@
   <script>
     (function() {
       'use strict';
+
+      const IS_PHONE = document.documentElement.classList.contains('phone');
+      const STAMP_SCALE = IS_PHONE ? 0.8 : 1;
+      const DEVICE_WORD = IS_PHONE ? 'スマホ' : 'タブレット';
 
       // ==========================================
       // 1. APP STATE & CONFIGURATION
@@ -1211,7 +1324,7 @@
       }
 
       function stampOnCanvas(x, y, stampObj) {
-        const size = state.stampSize;
+        const size = state.stampSize * STAMP_SCALE;
         const radius = size * 0.56;
 
         drawCtx.save();
@@ -1381,7 +1494,7 @@
           }
         } else if (tool === 'stamp') {
           ptr.stampDist += dist;
-          if (ptr.stampDist > state.stampSize * 1.15) {
+          if (ptr.stampDist > state.stampSize * STAMP_SCALE * 1.15) {
             ptr.stampDist = 0;
             stampOnCanvas(newX, newY, state.selectedStamp);
           }
@@ -1727,6 +1840,7 @@
 
       function updateAlbumBadge() {
         document.getElementById('albumCount').textContent = String(state.album.length);
+        document.getElementById('albumBadge').textContent = String(state.album.length);
       }
 
       async function saveCurrentArtwork() {
@@ -1763,7 +1877,7 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        showToast('📥', 'タブレットに ほぞんしたよ！');
+        showToast('📥', DEVICE_WORD + 'に ほぞんしたよ！');
       }
 
       function renderAlbumModal() {
@@ -1989,14 +2103,6 @@
           }
         });
 
-        document.getElementById('btnSoundToggle').addEventListener('click', function() {
-          state.soundEnabled = !state.soundEnabled;
-          document.getElementById('soundEmoji').textContent = state.soundEnabled ? '🔊' : '🔇';
-          document.getElementById('soundLabel').textContent = state.soundEnabled ? 'おと ON' : 'おと OFF';
-          if (state.soundEnabled) playUiClick();
-          showToast(state.soundEnabled ? '🔊' : '🔇', state.soundEnabled ? 'こうかおん ON♪' : 'おとを けしたよ');
-        });
-
         document.getElementById('btnSaveArt').addEventListener('click', saveCurrentArtwork);
         document.getElementById('btnOpenAlbum').addEventListener('click', function() {
           renderAlbumModal();
@@ -2035,7 +2141,7 @@
         function updateFullscreenButtonUI() {
           if (state.isFullscreenMode) {
             fsEmoji.textContent = '🔒';
-            fsLabel.textContent = 'もとにもどす(2かいタップ)';
+            fsLabel.textContent = '2かいタップ';
             fsBtn.style.background = '#FEF2F2';
             fsBtn.style.borderColor = '#EF4444';
           } else {
@@ -2100,12 +2206,14 @@
           }
         });
 
-        document.addEventListener('fullscreenchange', function() {
-          if (!document.fullscreenElement && state.isFullscreenMode) {
+        function onFullscreenChange() {
+          if (!document.fullscreenElement && !document.webkitFullscreenElement && state.isFullscreenMode) {
             state.isFullscreenMode = false;
             updateFullscreenButtonUI();
           }
-        });
+        }
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 
         document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
           backdrop.addEventListener('click', function(e) {
@@ -2123,7 +2231,21 @@
       // ==========================================
       // 10. BOOTSTRAP ON LOAD
       // ==========================================
+      function replaceDeviceWords() {
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach(function(n) {
+          const tag = n.parentNode && n.parentNode.nodeName;
+          if (tag === 'SCRIPT' || tag === 'STYLE') return;
+          if (n.nodeValue.indexOf('タブレット') !== -1) {
+            n.nodeValue = n.nodeValue.split('タブレット').join('スマホ');
+          }
+        });
+      }
+
       window.addEventListener('load', function() {
+        if (IS_PHONE) replaceDeviceWords();
         renderColorGrid();
         renderStampGrid();
         loadAlbumFromStorage();
